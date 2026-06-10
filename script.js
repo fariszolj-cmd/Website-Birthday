@@ -43,14 +43,14 @@ function evadeButton() {
   const btn = btnNo;
   const card = document.querySelector('.card');
   const cardRect = card.getBoundingClientRect();
-  const btnW = btn.offsetWidth;
-  const btnH = btn.offsetHeight;
+  const btnW = btn.offsetWidth || 100;
+  const btnH = btn.offsetHeight || 40;
 
-  const padding = 10;
-  const maxX = cardRect.width - btnW - padding;
-  const maxY = cardRect.height - btnH - padding;
-  const newX = padding + Math.random() * Math.max(10, maxX - padding);
-  const newY = padding + Math.random() * Math.max(10, maxY - padding);
+  const overflow = 0.2;
+  const rangeX = cardRect.width * (1 + overflow * 2);
+  const rangeY = cardRect.height * (1 + overflow * 2);
+  const newX = -cardRect.width * overflow + Math.random() * rangeX;
+  const newY = -cardRect.height * overflow + Math.random() * rangeY;
 
   // Move button to card-level so it can roam freely
   if (btn.parentElement !== card) {
@@ -91,6 +91,10 @@ btnNo.addEventListener('touchstart', (e) => {
   e.preventDefault();
   evadeButton();
 }, { passive: false });
+btnNo.addEventListener('click', (e) => {
+  e.preventDefault();
+  evadeButton();
+});
 
 // ===== HELL YEAH =====
 btnYes.addEventListener('click', function() {
