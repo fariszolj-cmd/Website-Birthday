@@ -112,7 +112,6 @@ btnYes.addEventListener('click', function() {
     screenChoice.classList.add('hidden');
     screenCelebration.classList.remove('hidden');
     document.body.classList.add('gallery-open');
-    setupGalleryObserver();
     revealCards();
     document.getElementById('scroll-arrow').style.display = 'none';
   }, 1200);
@@ -180,11 +179,54 @@ function buildGallery() {
       div.appendChild(img);
     }
     div.addEventListener('click', () => {
-      scrollPaused = !scrollPaused;
+      openViewer(i);
     });
     grid.appendChild(div);
   });
 }
+
+let viewerIndex = 0;
+
+function openViewer(index) {
+  scrollPaused = true;
+  viewerIndex = index;
+  const item = galleryItems[index];
+  const content = document.getElementById('viewer-content');
+  content.innerHTML = '';
+  if (item.type === 'video') {
+    const vid = document.createElement('video');
+    vid.src = item.src;
+    vid.controls = true;
+    vid.autoplay = true;
+    content.appendChild(vid);
+  } else {
+    const img = document.createElement('img');
+    img.src = item.src;
+    content.appendChild(img);
+  }
+  document.getElementById('viewer').classList.remove('hidden');
+  document.getElementById('viewer-counter').textContent = (index + 1) + ' / ' + galleryItems.length;
+}
+
+function closeViewer() {
+  document.getElementById('viewer').classList.add('hidden');
+  document.getElementById('viewer-content').innerHTML = '';
+  scrollPaused = false;
+}
+
+document.getElementById('viewer-close').addEventListener('click', closeViewer);
+document.getElementById('viewer-prev').addEventListener('click', () => {
+  if (viewerIndex > 0) openViewer(viewerIndex - 1);
+});
+document.getElementById('viewer-next').addEventListener('click', () => {
+  if (viewerIndex < galleryItems.length - 1) openViewer(viewerIndex + 1);
+});
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('viewer').classList.contains('hidden')) return;
+  if (e.key === 'Escape') closeViewer();
+  if (e.key === 'ArrowLeft' && viewerIndex > 0) openViewer(viewerIndex - 1);
+  if (e.key === 'ArrowRight' && viewerIndex < galleryItems.length - 1) openViewer(viewerIndex + 1);
+});
 
 function startAutoScroll() {
   stopAutoScroll();
@@ -276,6 +318,20 @@ const originalReveal = revealCards;
 revealCards = function() {
   originalReveal();
   startSideComments();
+  observeSections();
 };
+
+// ===== SCROLL REVEAL SECTIONS =====
+function observeSections() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
 
 buildGallery();
