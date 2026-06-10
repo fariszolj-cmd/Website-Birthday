@@ -40,7 +40,7 @@ let evadeCount = 0;
 function evadeButton() {
   evadeCount++;
   const btn = btnNo;
-  const card = document.querySelector('.card');
+  const card = document.getElementById('app-card');
   const cardRect = card.getBoundingClientRect();
   const btnW = btn.offsetWidth || 100;
   const btnH = btn.offsetHeight || 40;
