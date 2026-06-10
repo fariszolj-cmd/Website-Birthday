@@ -61,15 +61,18 @@ function evadeButton() {
   btn.style.top = newY + 'px';
   btn.style.zIndex = '5';
 
-  if (evadeCount === 3) {
-    btn.textContent = 'nice try 😘';
-  } else if (evadeCount === 5) {
-    btn.textContent = 'stop it 🤭';
-  } else if (evadeCount === 7) {
-    btn.textContent = 'just give up 💀';
-  } else if (evadeCount >= 10) {
-    btn.textContent = 'lmaoo okay you win 🏆';
-  }
+  const messages = [
+    'nice try 😘',
+    'stop it 🤭',
+    'not today 💅',
+    'keep trying ❤️',
+    'just give up 💀',
+    'too slow 😏',
+    'never gonna catch me 🏃',
+    'lmaoo okay you win 🏆',
+  ];
+  const idx = Math.min(evadeCount - 1, messages.length - 1);
+  btn.textContent = messages[idx];
 }
 
 // Reset button position when going back to choice screen
