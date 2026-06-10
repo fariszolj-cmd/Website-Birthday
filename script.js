@@ -70,8 +70,13 @@ function evadeButton() {
     'too slow 😏',
     'never gonna catch me 🏃',
     'lmaoo okay you win 🏆',
+    'still going? 😂',
+    'you never learn 💀',
+    'give up already 🙄',
+    'persistent huh 😏',
+    'ok you got me 🥹',
   ];
-  const idx = Math.min(evadeCount - 1, messages.length - 1);
+  const idx = (evadeCount - 1) % messages.length;
   btn.textContent = messages[idx];
 }
 
