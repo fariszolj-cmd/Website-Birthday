@@ -140,44 +140,31 @@ function playBirthdaySong() {
   }
 }
 
-// ===== CINEMATIC GALLERY =====
+// ===== AUTO-SCROLL GALLERY =====
 const galleryItems = [
-  { src: 'Azra/0A710B1C-5134-427E-80C8-E94E2B35373A.JPG', type: 'img', size: 'large', caption: '', chapter: 0 },
-  { src: 'Azra/2FE8DF4B-F46F-4E56-93C8-93C74C68EFB8.JPG', type: 'img', size: 'small', caption: '', chapter: 0 },
-  { src: 'Azra/3119ff38-ef75-436b-9007-ae454ed4464f.JPG', type: 'img', size: 'medium', caption: '', chapter: 0 },
-  { src: 'Azra/324461B2-DFAA-43AC-BB1E-BCDF17905E52.JPG', type: 'img', size: 'large', caption: '', chapter: 0 },
-  { src: 'Azra/5F63873F-42F9-47E5-9B10-49C8F649E871.JPG', type: 'img', size: 'small', caption: '', chapter: 1 },
-  { src: 'Azra/70DFC1EC-E48C-411C-AFF7-171BBEF792FD.JPG', type: 'img', size: 'medium', caption: '', chapter: 1 },
-  { src: 'Azra/7EBE1CCD-B870-432B-B3C1-F55D34CDA9F9.JPG', type: 'img', size: 'large', caption: '', chapter: 1 },
-  { src: 'Azra/98633d3b-9081-4b31-8df0-a82cf5bb1ce0.JPG', type: 'img', size: 'medium', caption: '', chapter: 2 },
-  { src: 'Azra/C7A69E74-7443-4939-9AA1-BB1D77BF7FFF.JPG', type: 'img', size: 'small', caption: '', chapter: 2 },
-  { src: 'Azra/IMG_1794.JPG', type: 'img', size: 'large', caption: '', chapter: 2 },
-  { src: 'Azra/IMG_8829.jpg', type: 'img', size: 'large', caption: '', chapter: 3 },
-  { src: 'Azra/355345b4421d4a76a35e80fb1950da72.MOV', type: 'video', size: 'large', caption: '', chapter: 3 },
+  { src: 'Azra/0A710B1C-5134-427E-80C8-E94E2B35373A.JPG', type: 'img' },
+  { src: 'Azra/2FE8DF4B-F46F-4E56-93C8-93C74C68EFB8.JPG', type: 'img' },
+  { src: 'Azra/3119ff38-ef75-436b-9007-ae454ed4464f.JPG', type: 'img' },
+  { src: 'Azra/324461B2-DFAA-43AC-BB1E-BCDF17905E52.JPG', type: 'img' },
+  { src: 'Azra/5F63873F-42F9-47E5-9B10-49C8F649E871.JPG', type: 'img' },
+  { src: 'Azra/70DFC1EC-E48C-411C-AFF7-171BBEF792FD.JPG', type: 'img' },
+  { src: 'Azra/7EBE1CCD-B870-432B-B3C1-F55D34CDA9F9.JPG', type: 'img' },
+  { src: 'Azra/98633d3b-9081-4b31-8df0-a82cf5bb1ce0.JPG', type: 'img' },
+  { src: 'Azra/C7A69E74-7443-4939-9AA1-BB1D77BF7FFF.JPG', type: 'img' },
+  { src: 'Azra/IMG_1794.JPG', type: 'img' },
+  { src: 'Azra/IMG_8829.jpg', type: 'img' },
+  { src: 'Azra/355345b4421d4a76a35e80fb1950da72.MOV', type: 'video' },
 ];
 
-const chapters = ['the beginning', 'us', 'celebration', 'memories'];
-
-let viewerOpen = false;
-let viewerIdx = 0;
-let touchStartX = 0;
+let autoScrollId = null;
+let scrollPaused = false;
 
 function buildGallery() {
   const grid = document.getElementById('gallery-grid');
   grid.innerHTML = '';
-
   galleryItems.forEach((item, i) => {
-    if (i === 0 || item.chapter !== galleryItems[i - 1].chapter) {
-      const ch = document.createElement('div');
-      ch.className = 'chapter-header';
-      ch.innerHTML = '<div class="chapter-label">chapter</div><div class="chapter-title">' + chapters[item.chapter] + '</div>';
-      grid.appendChild(ch);
-    }
-
-    const card = document.createElement('div');
-    card.className = 'memory-card ' + item.size;
-    card.dataset.idx = i;
-
+    const div = document.createElement('div');
+    div.className = 'gallery-slide';
     if (item.type === 'video') {
       const vid = document.createElement('video');
       vid.src = item.src;
@@ -185,109 +172,49 @@ function buildGallery() {
       vid.loop = true;
       vid.playsInline = true;
       vid.preload = 'metadata';
-      vid.loading = 'lazy';
-      card.appendChild(vid);
-
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) vid.play();
-          else vid.pause();
-        });
-      }, { threshold: 0.3 });
-      obs.observe(card);
+      div.appendChild(vid);
     } else {
       const img = document.createElement('img');
       img.src = item.src;
       img.loading = 'lazy';
-      card.appendChild(img);
+      div.appendChild(img);
     }
-
-    card.addEventListener('click', () => openViewer(i));
-    grid.appendChild(card);
+    div.addEventListener('click', () => {
+      scrollPaused = !scrollPaused;
+    });
+    grid.appendChild(div);
   });
+}
+
+function startAutoScroll() {
+  stopAutoScroll();
+  const speed = 1;
+  autoScrollId = setInterval(() => {
+    if (scrollPaused) return;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const current = window.scrollY;
+    if (current >= maxScroll - 5) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollBy(0, speed);
+    }
+  }, 16);
+}
+
+function stopAutoScroll() {
+  if (autoScrollId) clearInterval(autoScrollId);
 }
 
 function setupGalleryObserver() {
-  const cards = document.querySelectorAll('.memory-card');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  cards.forEach(c => obs.observe(c));
-}
-
-function revealCards() {
-  const cards = document.querySelectorAll('.memory-card');
-  let delay = 0;
-  cards.forEach(c => {
-    setTimeout(() => c.classList.add('visible'), delay);
-    delay += 80;
+  const cards = document.querySelectorAll('.gallery-slide');
+  cards.forEach((c, i) => {
+    setTimeout(() => c.classList.add('visible'), i * 60);
   });
 }
 
-// ===== FULLSCREEN VIEWER =====
-function openViewer(idx) {
-  viewerIdx = idx;
-  viewerOpen = true;
-  const viewer = document.getElementById('viewer');
-  const content = document.getElementById('viewer-content');
-  const counter = document.getElementById('viewer-counter');
-  content.innerHTML = '';
-
-  const item = galleryItems[idx];
-  if (item.type === 'video') {
-    const vid = document.createElement('video');
-    vid.src = item.src;
-    vid.controls = true;
-    vid.autoplay = true;
-    content.appendChild(vid);
-  } else {
-    const img = document.createElement('img');
-    img.src = item.src;
-    content.appendChild(img);
-  }
-
-  counter.textContent = (idx + 1) + ' / ' + galleryItems.length;
-  viewer.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
+function revealCards() {
+  setupGalleryObserver();
+  startAutoScroll();
 }
-
-function closeViewer() {
-  viewerOpen = false;
-  document.getElementById('viewer').classList.add('hidden');
-  document.body.style.overflow = '';
-  const vid = document.querySelector('#viewer-content video');
-  if (vid) vid.pause();
-}
-
-function navigateViewer(dir) {
-  const next = viewerIdx + dir;
-  if (next < 0 || next >= galleryItems.length) return;
-  openViewer(next);
-}
-
-document.getElementById('viewer-close').addEventListener('click', closeViewer);
-
-document.getElementById('viewer').addEventListener('touchstart', (e) => {
-  touchStartX = e.touches[0].clientX;
-});
-
-document.getElementById('viewer').addEventListener('touchend', (e) => {
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(dx) > 60) {
-    navigateViewer(dx < 0 ? 1 : -1);
-  }
-});
-
-document.addEventListener('keydown', (e) => {
-  if (!viewerOpen) return;
-  if (e.key === 'Escape') closeViewer();
-  if (e.key === 'ArrowLeft') navigateViewer(-1);
-  if (e.key === 'ArrowRight') navigateViewer(1);
-});
 
 buildGallery();
