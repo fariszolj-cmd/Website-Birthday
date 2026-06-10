@@ -193,6 +193,14 @@ h1, h2, p {
   line-height: 1.6;
 }
 
+.heart-quote {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: rgba(255, 154, 158, 0.85) !important;
+  margin: 6px 0 0;
+  letter-spacing: 0.3px;
+}
+
 /* ===== SPARKLES ===== */
 .sparkle-container {
   position: fixed;
