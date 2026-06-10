@@ -188,7 +188,7 @@ function buildGallery() {
 
 function startAutoScroll() {
   stopAutoScroll();
-  const speed = 1;
+  const speed = 2;
   autoScrollId = setInterval(() => {
     if (scrollPaused) return;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -208,7 +208,7 @@ function stopAutoScroll() {
 function setupGalleryObserver() {
   const cards = document.querySelectorAll('.gallery-slide');
   cards.forEach((c, i) => {
-    setTimeout(() => c.classList.add('visible'), i * 60);
+    setTimeout(() => c.classList.add('visible'), i * 30);
   });
 }
 
@@ -216,5 +216,66 @@ function revealCards() {
   setupGalleryObserver();
   startAutoScroll();
 }
+
+// ===== SIDE BIRTHDAY COMMENTS =====
+const sideMessages = [
+  'Happy birthday gorgeous ❤️',
+  'Another year of being perfect ✨',
+  "You're the cutest 🎂",
+  'Birthday queen 👑',
+  'So glad you were born 🎉',
+  'You make life better 💕',
+  'The prettiest girl alive 😍',
+  'My favorite person 🥰',
+  'Born to be amazing 🌟',
+  "World's cutest birthday girl 🎈",
+  'A whole year older, still fine 🔥',
+  'Made for greatness 💫',
+  'My everything 💖',
+  'You were born to shine 🌸',
+  'Best thing that happened to me 💗',
+];
+
+function spawnSideComment() {
+  const container = document.getElementById('side-comments');
+  if (!container) return;
+
+  const el = document.createElement('div');
+  el.className = 'side-comment';
+  el.textContent = sideMessages[Math.floor(Math.random() * sideMessages.length)];
+
+  const isLeft = Math.random() > 0.5;
+  const top = Math.random() * 80 + 5;
+
+  el.style.left = isLeft ? '8px' : '';
+  el.style.right = isLeft ? '' : '8px';
+  el.style.top = top + '%';
+  el.style.textAlign = isLeft ? 'left' : 'right';
+  el.style.fontSize = (0.75 + Math.random() * 0.3) + 'rem';
+
+  container.appendChild(el);
+  setTimeout(() => el.remove(), 8000);
+}
+
+let sideCommentInterval = null;
+
+function startSideComments() {
+  stopSideComments();
+  sideCommentInterval = setInterval(spawnSideComment, 3000);
+}
+
+function stopSideComments() {
+  if (sideCommentInterval) {
+    clearInterval(sideCommentInterval);
+    sideCommentInterval = null;
+  }
+}
+
+// Patch revealCards to also start side comments
+const originalReveal = revealCards;
+revealCards = function() {
+  originalReveal();
+  startSideComments();
+};
 
 buildGallery();

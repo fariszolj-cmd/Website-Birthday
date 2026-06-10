@@ -399,6 +399,42 @@ body.gallery-open #app-card {
   50% { transform: translateX(-50%) translateY(6px); opacity: 0.3; }
 }
 
+/* ===== SIDE COMMENTS ===== */
+#side-comments {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  overflow: hidden;
+}
+
+.side-comment {
+  position: absolute;
+  font-size: 0.85rem;
+  color: rgba(255, 180, 200, 0.5);
+  white-space: nowrap;
+  animation: sideCommentFloat 8s linear forwards;
+  letter-spacing: 0.5px;
+  font-style: italic;
+}
+
+@keyframes sideCommentFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) translateX(0);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) translateX(10px);
+  }
+}
+
 /* ===== RESPONSIVE ===== */
 @media (min-width: 500px) {
   #gallery-grid {
