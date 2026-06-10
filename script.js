@@ -41,21 +41,25 @@ let evadeCount = 0;
 function evadeButton() {
   evadeCount++;
   const btn = btnNo;
-  const viewW = window.innerWidth;
-  const viewH = window.innerHeight;
+  const card = document.querySelector('.card');
+  const cardRect = card.getBoundingClientRect();
   const btnW = btn.offsetWidth;
   const btnH = btn.offsetHeight;
 
-  // Random position anywhere in the viewport
-  const maxX = viewW - btnW - 10;
-  const maxY = viewH - btnH - 10;
-  const newX = Math.max(5, Math.random() * maxX);
-  const newY = Math.max(5, Math.random() * maxY);
+  const padding = 10;
+  const maxX = cardRect.width - btnW - padding;
+  const maxY = cardRect.height - btnH - padding;
+  const newX = padding + Math.random() * Math.max(10, maxX - padding);
+  const newY = padding + Math.random() * Math.max(10, maxY - padding);
 
-  btn.style.position = 'fixed';
+  // Move button to card-level so it can roam freely
+  if (btn.parentElement !== card) {
+    card.appendChild(btn);
+  }
+  btn.style.position = 'absolute';
   btn.style.left = newX + 'px';
   btn.style.top = newY + 'px';
-  btn.style.zIndex = '9999';
+  btn.style.zIndex = '5';
 
   if (evadeCount === 3) {
     btn.textContent = 'nice try 😘';
@@ -70,6 +74,10 @@ function evadeButton() {
 
 // Reset button position when going back to choice screen
 function resetNoButton() {
+  const parent = document.querySelector('.choice-buttons');
+  if (btnNo.parentElement !== parent) {
+    parent.appendChild(btnNo);
+  }
   btnNo.style.position = '';
   btnNo.style.left = '';
   btnNo.style.top = '';
