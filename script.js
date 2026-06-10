@@ -230,13 +230,21 @@ document.addEventListener('keydown', (e) => {
 
 function startAutoScroll() {
   stopAutoScroll();
-  const speed = 2;
+  const speed = 4;
+  let looping = false;
   autoScrollId = setInterval(() => {
-    if (scrollPaused) return;
+    if (scrollPaused || looping) return;
     const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
     const current = window.scrollY;
-    if (current >= maxScroll - 5) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (current >= maxScroll - 10) {
+      looping = true;
+      stopAutoScroll();
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+          startAutoScroll();
+        }, 800);
+      }, 600);
     } else {
       window.scrollBy(0, speed);
     }
