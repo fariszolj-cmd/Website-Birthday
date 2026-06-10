@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Happy Birthday Babygirl ❤️</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a0011, #2d001a, #4d0026);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 100, 150, 0.25);
+      border-radius: 32px;
+      padding: 40px 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    h1, h2, p {
+      color: #fff;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* ===== NAME INPUT SCREEN ===== */
+    #screen-name h1 {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #screen-name p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    #nameInput {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 40px;
+      border: 2px solid rgba(255, 100, 150, 0.3);
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      font-size: 1.05rem;
+      outline: none;
+      text-align: center;
+      transition: border-color 0.3s;
+    }
+
+    #nameInput::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    #nameInput:focus {
+      border-color: #ff6b8a;
+    }
+
+    .error-msg {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 14px 48px;
+      border: none;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #ff6b8a, #ff8a9e);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 24px rgba(255, 107, 138, 0.35);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.96);
+    }
+
+    /* ===== CHOICE SCREEN ===== */
+    #screen-choice h2 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    #screen-choice p {
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 28px;
+    }
+
+    .choice-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      position: relative;
+    }
+
+    .btn-yes {
+      padding: 16px 56px;
+      border: none;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #ff2d55, #ff6b8a);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(255, 45, 85, 0.4);
+      transition: transform 0.15s;
+      width: fit-content;
+      min-width: 200px;
+    }
+
+    .btn-yes:active {
+      transform: scale(0.96);
+    }
+
+    .btn-no {
+      padding: 14px 40px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 40px;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.08s ease;
+      position: relative;
+      touch-action: none;
+      width: fit-content;
+      min-width: 120px;
+    }
+
+    /* ===== CELEBRATION SCREEN ===== */
+    #screen-celebration {
+      position: relative;
+    }
+
+    #screen-celebration h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fbc2eb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #screen-celebration p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .sparkle-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #ff6b8a;
+      border-radius: 50%;
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 1.2rem;
+      animation: heartFloat linear infinite;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+    }
+
+    @keyframes heartFloat {
+      0% {
+        transform: translateY(100vh) rotate(0deg) scale(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-10vh) rotate(360deg) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    /* ===== HELL YEAH BURST ===== */
+    .burst-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .burst-overlay.show {
+      opacity: 1;
+    }
+
+    .burst-text {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #ff2d55;
+      text-shadow: 0 0 40px rgba(255, 45, 85, 0.8), 0 0 80px rgba(255, 45, 85, 0.4);
+      animation: burstPulse 0.8s ease-out;
+      transform-origin: center;
+    }
+
+    @keyframes burstPulse {
+      0% {
+        transform: scale(0.3);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.3);
+        opacity: 1;
+      }
+      70% {
+        transform: scale(0.95);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* confetti canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* === EDITOR NOTES === */
+    /* 
+      ===== HOW TO EDIT =====
+      - Text: find the text in quotes below and change it
+      - Colors: look for #hex values, change them
+      - Images/videos: find the <!-- MEDIA --> section below
+      - Song: find the <!-- SONG --> section below
+      - Name check (Azra Cokoja): edit the normalizeAndCheckName() function
+    */
+  </style>
+</head>
+<body>
+
+  <!-- Sparkle background (always on) -->
+  <div class="sparkle-container" id="sparkleContainer"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- HELL YEAH burst overlay -->
+  <div class="burst-overlay" id="burstOverlay">
+    <div class="burst-text">HELL YEAH! ❤️</div>
+  </div>
+
+  <div class="container">
+    <div class="card">
+
+      <!-- ===== SCREEN 1: NAME INPUT ===== -->
+      <div id="screen-name">
+        <h1>Hey you ❤️</h1>
+        <p>Enter your name to unlock this</p>
+        <input type="text" id="nameInput" placeholder="Your name..." autocomplete="off" />
+        <p class="error-msg" id="errorMsg"></p>
+        <button class="btn-primary" id="btnEnter">Let's go</button>
+      </div>
+
+      <!-- ===== SCREEN 2: CHOICE ===== -->
+      <div id="screen-choice" class="hidden">
+        <h2>we fucking right? 😈</h2>
+        <p>choose wisely...</p>
+        <div class="choice-buttons">
+          <button class="btn-yes" id="btnYes">HELL YEAH</button>
+          <button class="btn-no" id="btnNo">naw</button>
+        </div>
+      </div>
+
+      <!-- ===== SCREEN 3: CELEBRATION ===== -->
+      <div id="screen-celebration" class="hidden">
+        <h1>Happy Birthday Babygirl! 🎂</h1>
+        <p>
+          but first lets celebrate this special day babygirl<br/><br/>
+          <!-- MEDIA: Add images/videos here -->
+          <!-- Example: <img src="photo.jpg" style="width:100%;border-radius:16px;margin-top:12px;" /> -->
+          <!-- Example: <video src="video.mp4" style="width:100%;border-radius:16px;margin-top:12px;" controls></video> -->
+          <!-- SONG: Add audio here -->
+          <!-- Example: <audio id="birthdaySong" src="song.mp3" controls style="margin-top:16px;width:100%;"></audio> -->
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ===== CONFIG =====
+    // Change this to whatever name(s) you want to accept
+    const VALID_NAMES = ['azra', 'azra cokoja', 'cokoja azra', 'cokoja'];
+
+    // ===== UTILITIES =====
+    function normalizeAndCheckName(input) {
+      const cleaned = input.trim().toLowerCase().replace(/\s+/g, ' ');
+      return VALID_NAMES.some(name => cleaned === name);
+    }
+
+    // ===== ELEMENTS =====
+    const screenName = document.getElementById('screen-name');
+    const screenChoice = document.getElementById('screen-choice');
+    const screenCelebration = document.getElementById('screen-celebration');
+    const nameInput = document.getElementById('nameInput');
+    const errorMsg = document.getElementById('errorMsg');
+    const btnEnter = document.getElementById('btnEnter');
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
+    const burstOverlay = document.getElementById('burstOverlay');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+
+    // ===== NAME ENTRY =====
+    function handleNameEntry() {
+      const val = nameInput.value;
+      if (normalizeAndCheckName(val)) {
+        errorMsg.textContent = '';
+        screenName.classList.add('hidden');
+        screenChoice.classList.remove('hidden');
+      } else {
+        errorMsg.textContent = 'wrong baby try again ❤️';
+      }
+    }
+
+    btnEnter.addEventListener('click', handleNameEntry);
+    nameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleNameEntry();
+    });
+
+    // ===== NAW BUTTON EVASION =====
+    let evadeCount = 0;
+
+    function evadeButton() {
+      evadeCount++;
+      const btn = btnNo;
+      const parent = btn.parentElement;
+      const parentRect = parent.getBoundingClientRect();
+      const btnRect = btn.getBoundingClientRect();
+
+      // Random position within parent bounds, keeping button visible
+      const maxX = parentRect.width - btnRect.width - 10;
+      const maxY = parentRect.height - btnRect.height - 10;
+      const minX = 0;
+      const minY = 0;
+
+      let newX, newY;
+      // Keep trying positions until we find one not overlapping the YES button too much
+      for (let attempt = 0; attempt < 20; attempt++) {
+        newX = Math.random() * maxX;
+        newY = Math.random() * maxY;
+        // Prefer far from YES button
+        const yesRect = btnYes.getBoundingClientRect();
+        const relYesX = yesRect.left - parentRect.left;
+        const relYesY = yesRect.top - parentRect.top;
+        const dist = Math.hypot(newX - relYesX, newY - relYesY);
+        if (dist > 100) break;
+      }
+
+      btn.style.position = 'absolute';
+      btn.style.left = newX + 'px';
+      btn.style.top = newY + 'px';
+
+      // After a few evades, taunt
+      if (evadeCount === 3) {
+        btn.textContent = 'nice try 😘';
+      } else if (evadeCount === 5) {
+        btn.textContent = 'stop it 🤭';
+      } else if (evadeCount === 7) {
+        btn.textContent = 'just give up 💀';
+      } else if (evadeCount >= 10) {
+        btn.textContent = 'lmaoo okay you win 🏆';
+      }
+    }
+
+    // Mouse hover evasion
+    btnNo.addEventListener('mouseover', evadeButton);
+    // Touch evasion (mobile) - move on touch start
+    btnNo.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      evadeButton();
+    }, { passive: false });
+
+    // ===== HELL YEAH =====
+    btnYes.addEventListener('click', function() {
+      // Show burst
+      burstOverlay.classList.add('show');
+
+      // Start confetti
+      startConfetti();
+
+      // Create heart rain
+      createHeartRain();
+
+      // After burst animation, show celebration
+      setTimeout(() => {
+        burstOverlay.classList.remove('show');
+        screenChoice.classList.add('hidden');
+        screenCelebration.classList.remove('hidden');
+
+        // Bigger sparkle celebration
+        intensifySparkles();
+      }, 1200);
+    });
+
+    // Also add touch support for mobile
+    btnYes.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      btnYes.click();
+    });
+
+    // ===== CONFETTI =====
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiPieces = [];
+    let confettiRunning = false;
+    let confettiRAF;
+
+    function resizeCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function startConfetti() {
+      confettiPieces = [];
+      const colors = ['#ff2d55', '#ff6b8a', '#ff9a9e', '#fad0c4', '#fbc2eb', '#a18cd1', '#ffd700', '#ff69b4'];
+      for (let i = 0; i < 200; i++) {
+        confettiPieces.push({
+          x: Math.random() * confettiCanvas.width,
+          y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+          w: Math.random() * 10 + 5,
+          h: Math.random() * 6 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 3,
+          vy: Math.random() * 3 + 2,
+          rot: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 8,
+        });
+      }
+      confettiRunning = true;
+      animateConfetti();
+    }
+
+    function animateConfetti() {
+      if (!confettiRunning) return;
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      let allDone = true;
+      for (const p of confettiPieces) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.rotSpeed;
+        if (p.y < confettiCanvas.height + 20) allDone = false;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rot * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      }
+      if (!allDone) {
+        confettiRAF = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiRunning = false;
+      }
+    }
+
+    // ===== HEART RAIN =====
+    function createHeartRain() {
+      const container = document.getElementById('sparkleContainer');
+      const emojis = ['❤️', '💖', '💗', '💕', '✨', '🎂', '🥳'];
+      for (let i = 0; i < 40; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+        heart.style.animationDuration = (Math.random() * 4 + 3) + 's';
+        heart.style.animationDelay = (Math.random() * 5) + 's';
+        container.appendChild(heart);
+        // Remove after animation
+        setTimeout(() => heart.remove(), 12000);
+      }
+    }
+
+    // ===== SPARKLE BACKGROUND =====
+    function initSparkles() {
+      const container = document.getElementById('sparkleContainer');
+      for (let i = 0; i < 50; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.width = (Math.random() * 4 + 2) + 'px';
+        sparkle.style.height = sparkle.style.width;
+        sparkle.style.animationDuration = (Math.random() * 6 + 4) + 's';
+        sparkle.style.animationDelay = (Math.random() * 8) + 's';
+        const colors = ['#ff6b8a', '#ff9a9e', '#fad0c4', '#fbc2eb', '#a18cd1'];
+        sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        container.appendChild(sparkle);
+      }
+    }
+
+    function intensifySparkles() {
+      const container = document.getElementById('sparkleContainer');
+      for (let i = 0; i < 80; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.width = (Math.random() * 6 + 3) + 'px';
+        sparkle.style.height = sparkle.style.width;
+        sparkle.style.animationDuration = (Math.random() * 4 + 2) + 's';
+        sparkle.style.animationDelay = (Math.random() * 3) + 's';
+        const colors = ['#ff2d55', '#ff6b8a', '#ffd700', '#ff9a9e', '#fbc2eb', '#a18cd1', '#ff69b4'];
+        sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        sparkle.style.boxShadow = '0 0 12px ' + sparkle.style.background;
+        container.appendChild(sparkle);
+      }
+    }
+
+    initSparkles();
+
+    // ===== KEYBOARD: press Enter on name screen =====
+    console.log('Website ready! Edit VALID_NAMES in the script to change accepted names.');
+  </script>
+
+</body>
+</html>
