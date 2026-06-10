@@ -1,53 +1,52 @@
-Design a premium mobile-first birthday memory gallery that feels like an emotional cinematic experience, not a standard photo album.
+Create a unique and emotional birthday gift website dedicated to one special person.
 
-The gallery contains hundreds of photos and videos from a birthday celebration. The goal is to make users feel like they are reliving the entire day.
+The website should feel like opening a personalized digital gift rather than visiting a normal website. Every section should tell a story and celebrate memories, friendship, and important moments shared together.
 
-Style:
+Concept:
 
-* Modern, luxury, immersive, emotional
-* Apple-level design quality
-* Dark elegant background with subtle gradients and glassmorphism
-* Smooth micro-interactions and fluid animations
-* No cheesy birthday graphics, balloons, confetti, or childish elements
-* Clean typography with strong visual hierarchy
+* A digital birthday experience that unfolds as the user scrolls.
+* The website feels personal, thoughtful, and handcrafted.
+* Focus on emotions, memories, inside jokes, achievements, and meaningful moments.
+* Make the recipient feel like the entire website was created just for them.
 
-Layout:
+Sections:
 
-* Full-screen vertical experience optimized for phones
-* Dynamic masonry layout mixed with large hero moments
-* Photos and videos have varying sizes to create rhythm and surprise
-* Important moments automatically appear larger
-* Videos autoplay silently when visible
-* Seamless scrolling with parallax effects
+* A beautiful welcome screen with a personalized birthday message.
+* A timeline of favorite memories together.
+* Interactive photo and video gallery.
+* "Things I Appreciate About You" section with animated cards.
+* Fun facts, inside jokes, and memorable quotes.
+* A digital scrapbook filled with photos, messages, and moments.
+* A birthday letter that reveals itself while scrolling.
+* A surprise section at the end with a heartfelt final message.
 
-Features:
+Design:
 
-* "Story Chapters" such as Arrival, Friends, Cake, Party, Late Night Memories
-* AI-generated memory highlights section at the top
-* Interactive timeline users can scrub through
-* Floating date/time indicators while scrolling
-* Beautiful transitions between sections
-* Video previews integrated naturally among photos
-* Memory cards with short captions and reactions
+* Mobile-first.
+* Modern, elegant, premium design.
+* Smooth animations and transitions.
+* Beautiful typography and storytelling.
+* High-quality visual presentation that puts memories at the center.
 
-Animations:
+Interactions:
 
-* Smooth fade-ins
-* Depth and motion effects while scrolling
-* Photos slightly tilt and react to touch
-* Elegant fullscreen viewer with swipe navigation
-* Premium motion design inspired by Apple Photos, Instagram, and modern award-winning portfolio websites
+* Photos expand into immersive fullscreen memories.
+* Videos blend naturally into the story.
+* Subtle animations triggered by scrolling.
+* Delightful micro-interactions that make exploring fun.
 
 Mood:
 
-* Emotional, nostalgic, cinematic, unforgettable
-* Feels like a luxury digital scrapbook made by a world-class designer
-* Every interaction should make the birthday feel special and memorable
+* Emotional, nostalgic, warm, genuine, and unforgettable.
+* Feels like a luxury digital keepsake that someone would revisit years later.
+* Personal rather than corporate.
+* Creative without being cheesy.
 
 Avoid:
 
-* Generic gallery grids
-* Template-looking designs
-* Bright rainbow colors
-* Dated UI patterns
-* Anything that feels cheap or amateur
+* Generic birthday templates.
+* Cartoon balloons, confetti everywhere, or childish graphics.
+* Excessive text walls.
+* Anything that feels like a standard photo gallery.
+
+The final result should feel like a cinematic digital love letter to someone's life, memories, and personality, making it one of the most meaningful birthday gifts they have ever received.
