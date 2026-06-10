@@ -106,6 +106,7 @@ btnNo.addEventListener('click', (e) => {
 
 // ===== HELL YEAH =====
 btnYes.addEventListener('click', function() {
+  playBirthdaySong();
   burstOverlay.classList.add('show');
   startConfetti();
   createHeartRain();
@@ -232,3 +233,62 @@ function intensifySparkles() {
 }
 
 initSparkles();
+
+// ===== YOUTUBE BACKGROUND AUDIO =====
+let ytPlayer = null;
+let ytReady = false;
+
+function loadYouTubeAPI() {
+  if (window.YT) return;
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  const firstScript = document.getElementsByTagName('script')[0];
+  firstScript.parentNode.insertBefore(tag, firstScript);
+}
+
+window.onYouTubeIframeAPIReady = function() {
+  ytReady = true;
+};
+
+function playBirthdaySong() {
+  if (!ytReady) {
+    loadYouTubeAPI();
+    const check = setInterval(() => {
+      if (ytReady) {
+        clearInterval(check);
+        createAndPlay();
+      }
+    }, 200);
+    return;
+  }
+  createAndPlay();
+}
+
+function createAndPlay() {
+  if (ytPlayer) {
+    ytPlayer.seekTo(96, true);
+    ytPlayer.playVideo();
+    return;
+  }
+  ytPlayer = new YT.Player('youtube-player', {
+    height: '0',
+    width: '0',
+    videoId: 'DhvbyEOq2u0',
+    playerVars: {
+      autoplay: 1,
+      start: 96,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      rel: 0,
+    },
+    events: {
+      onReady: (e) => {
+        e.target.playVideo();
+      },
+    },
+  });
+}
+
+loadYouTubeAPI();
