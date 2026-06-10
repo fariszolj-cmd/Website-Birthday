@@ -112,6 +112,7 @@ btnYes.addEventListener('click', function() {
 
   setTimeout(() => {
     burstOverlay.classList.remove('show');
+    resetNoButton();
     screenChoice.classList.add('hidden');
     screenCelebration.classList.remove('hidden');
     intensifySparkles();
