@@ -235,15 +235,29 @@ function intensifySparkles() {
 initSparkles();
 
 // ===== BACKGROUND AUDIO =====
+let player;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('yt-player', {
+    height: '0',
+    width: '0',
+    videoId: 'DhvbyEOq2u0',
+    playerVars: {
+      start: 96,
+      controls: 0,
+      disablekb: 1,
+      fs: 0,
+      modestbranding: 1,
+      rel: 0,
+    },
+  });
+}
+
 function playBirthdaySong() {
-  const existing = document.getElementById('bgAudio');
-  if (existing) {
-    existing.remove();
+  if (!player) {
+    setTimeout(playBirthdaySong, 300);
+    return;
   }
-  const iframe = document.createElement('iframe');
-  iframe.id = 'bgAudio';
-  iframe.src = 'https://www.youtube.com/embed/DhvbyEOq2u0?autoplay=1&start=96&controls=0&showinfo=0&rel=0&modestbranding=1';
-  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0.01;pointer-events:none;';
-  iframe.allow = 'autoplay';
-  document.body.appendChild(iframe);
+  player.seekTo(96);
+  player.playVideo();
 }
