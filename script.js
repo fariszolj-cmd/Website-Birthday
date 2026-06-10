@@ -116,6 +116,7 @@ btnYes.addEventListener('click', function() {
     resetNoButton();
     screenChoice.classList.add('hidden');
     screenCelebration.classList.remove('hidden');
+    document.body.classList.add('gallery-open');
     intensifySparkles();
   }, 1200);
 });
@@ -235,29 +236,108 @@ function intensifySparkles() {
 initSparkles();
 
 // ===== BACKGROUND AUDIO =====
-let player;
+function playBirthdaySong() {
+  const audio = document.getElementById('birthdaySong');
+  if (audio) {
+    audio.currentTime = 96;
+    audio.play();
+  }
+}
 
-function onYouTubeIframeAPIReady() {
-  player = new YT.Player('yt-player', {
-    height: '0',
-    width: '0',
-    videoId: 'DhvbyEOq2u0',
-    playerVars: {
-      start: 96,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      modestbranding: 1,
-      rel: 0,
-    },
+// ===== GALLERY =====
+const mediaFiles = [
+  { src: 'Azra/0A710B1C-5134-427E-80C8-E94E2B35373A.JPG', type: 'img' },
+  { src: 'Azra/2FE8DF4B-F46F-4E56-93C8-93C74C68EFB8.JPG', type: 'img' },
+  { src: 'Azra/3119ff38-ef75-436b-9007-ae454ed4464f.JPG', type: 'img' },
+  { src: 'Azra/324461B2-DFAA-43AC-BB1E-BCDF17905E52.JPG', type: 'img' },
+  { src: 'Azra/5F63873F-42F9-47E5-9B10-49C8F649E871.JPG', type: 'img' },
+  { src: 'Azra/70DFC1EC-E48C-411C-AFF7-171BBEF792FD.JPG', type: 'img' },
+  { src: 'Azra/7EBE1CCD-B870-432B-B3C1-F55D34CDA9F9.JPG', type: 'img' },
+  { src: 'Azra/98633d3b-9081-4b31-8df0-a82cf5bb1ce0.JPG', type: 'img' },
+  { src: 'Azra/C7A69E74-7443-4939-9AA1-BB1D77BF7FFF.JPG', type: 'img' },
+  { src: 'Azra/IMG_1794.JPG', type: 'img' },
+  { src: 'Azra/IMG_8829.jpg', type: 'img' },
+  { src: 'Azra/355345b4421d4a76a35e80fb1950da72.MOV', type: 'video' },
+];
+
+let currentLightboxIdx = -1;
+
+function buildGallery() {
+  const container = document.getElementById('gallery');
+  container.innerHTML = '';
+  mediaFiles.forEach((file, i) => {
+    const div = document.createElement('div');
+    div.className = 'item' + (file.type === 'video' ? ' video-item' : '');
+    if (file.type === 'video') {
+      const vid = document.createElement('video');
+      vid.src = file.src;
+      vid.muted = true;
+      vid.loop = true;
+      vid.preload = 'metadata';
+      vid.addEventListener('mouseenter', () => vid.play());
+      vid.addEventListener('mouseleave', () => vid.pause());
+      div.appendChild(vid);
+    } else {
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+      img.src = file.src;
+      div.appendChild(img);
+    }
+    div.addEventListener('click', () => openLightbox(i));
+    container.appendChild(div);
   });
 }
 
-function playBirthdaySong() {
-  if (!player) {
-    setTimeout(playBirthdaySong, 300);
-    return;
+function openLightbox(idx) {
+  currentLightboxIdx = idx;
+  const lb = document.getElementById('lightbox');
+  lb.innerHTML = '<span id="lightbox-close">&times;</span><span id="lightbox-prev">&#10094;</span><span id="lightbox-next">&#10095;</span>';
+  const file = mediaFiles[idx];
+  if (file.type === 'video') {
+    const vid = document.createElement('video');
+    vid.src = file.src;
+    vid.controls = true;
+    vid.autoplay = true;
+    vid.id = 'lightbox-vid';
+    lb.appendChild(vid);
+  } else {
+    const img = document.createElement('img');
+    img.src = file.src;
+    img.id = 'lightbox-img';
+    lb.appendChild(img);
   }
-  player.seekTo(96);
-  player.playVideo();
+  lb.classList.remove('hidden');
+
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox-prev').addEventListener('click', prevLightbox);
+  document.getElementById('lightbox-next').addEventListener('click', nextLightbox);
+  lb.addEventListener('click', (e) => {
+    if (e.target === lb) closeLightbox();
+  });
+
+  document.addEventListener('keydown', lightboxKeydown);
 }
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.add('hidden');
+  document.removeEventListener('keydown', lightboxKeydown);
+  currentLightboxIdx = -1;
+}
+
+function prevLightbox() {
+  if (currentLightboxIdx <= 0) return;
+  openLightbox(currentLightboxIdx - 1);
+}
+
+function nextLightbox() {
+  if (currentLightboxIdx >= mediaFiles.length - 1) return;
+  openLightbox(currentLightboxIdx + 1);
+}
+
+function lightboxKeydown(e) {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') prevLightbox();
+  if (e.key === 'ArrowRight') nextLightbox();
+}
+
+buildGallery();
