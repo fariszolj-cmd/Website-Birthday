@@ -240,11 +240,20 @@ function playBirthdaySong() {
   const audio = document.getElementById('birthdaySong');
   if (audio) {
     audio.currentTime = 96;
-    audio.play();
+    audio.play().catch(() => {
+      // Autoplay blocked - play on first user tap
+      const tapPlay = () => {
+        audio.play();
+        document.removeEventListener('click', tapPlay);
+        document.removeEventListener('touchstart', tapPlay);
+      };
+      document.addEventListener('click', tapPlay);
+      document.addEventListener('touchstart', tapPlay);
+    });
   }
 }
 
-// ===== GALLERY =====
+// ===== SLIDESHOW =====
 const mediaFiles = [
   { src: 'Azra/0A710B1C-5134-427E-80C8-E94E2B35373A.JPG', type: 'img' },
   { src: 'Azra/2FE8DF4B-F46F-4E56-93C8-93C74C68EFB8.JPG', type: 'img' },
@@ -260,84 +269,88 @@ const mediaFiles = [
   { src: 'Azra/355345b4421d4a76a35e80fb1950da72.MOV', type: 'video' },
 ];
 
-let currentLightboxIdx = -1;
+let slideIndex = 0;
+let slideTimer = null;
+let slidePaused = false;
 
-function buildGallery() {
-  const container = document.getElementById('gallery');
-  container.innerHTML = '';
+function buildSlideshow() {
+  const track = document.getElementById('slideshow-track');
+  const dots = document.getElementById('slideshow-dots');
+  track.innerHTML = '';
+  dots.innerHTML = '';
+
   mediaFiles.forEach((file, i) => {
-    const div = document.createElement('div');
-    div.className = 'item' + (file.type === 'video' ? ' video-item' : '');
     if (file.type === 'video') {
       const vid = document.createElement('video');
       vid.src = file.src;
+      vid.className = 'slide video-slide';
       vid.muted = true;
       vid.loop = true;
-      vid.preload = 'metadata';
-      vid.addEventListener('mouseenter', () => vid.play());
-      vid.addEventListener('mouseleave', () => vid.pause());
-      div.appendChild(vid);
+      track.appendChild(vid);
     } else {
       const img = document.createElement('img');
-      img.loading = 'lazy';
       img.src = file.src;
-      div.appendChild(img);
+      img.className = 'slide';
+      img.loading = 'lazy';
+      track.appendChild(img);
     }
-    div.addEventListener('click', () => openLightbox(i));
-    container.appendChild(div);
+
+    const dot = document.createElement('span');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goToSlide(i));
+    dots.appendChild(dot);
+  });
+
+  goToSlide(0);
+  startAutoAdvance();
+}
+
+function goToSlide(idx) {
+  const slides = document.querySelectorAll('#slideshow-track .slide');
+  const dots = document.querySelectorAll('#slideshow-dots .dot');
+  if (idx < 0) idx = slides.length - 1;
+  if (idx >= slides.length) idx = 0;
+  slideIndex = idx;
+
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+  document.getElementById('slideshow-counter').textContent = (idx + 1) + ' / ' + slides.length;
+
+  // Play video if current slide is video
+  slides.forEach((s, i) => {
+    if (s.tagName === 'VIDEO') {
+      if (i === idx) s.play();
+      else s.pause();
+    }
   });
 }
 
-function openLightbox(idx) {
-  currentLightboxIdx = idx;
-  const lb = document.getElementById('lightbox');
-  lb.innerHTML = '<span id="lightbox-close">&times;</span><span id="lightbox-prev">&#10094;</span><span id="lightbox-next">&#10095;</span>';
-  const file = mediaFiles[idx];
-  if (file.type === 'video') {
-    const vid = document.createElement('video');
-    vid.src = file.src;
-    vid.controls = true;
-    vid.autoplay = true;
-    vid.id = 'lightbox-vid';
-    lb.appendChild(vid);
-  } else {
-    const img = document.createElement('img');
-    img.src = file.src;
-    img.id = 'lightbox-img';
-    lb.appendChild(img);
-  }
-  lb.classList.remove('hidden');
-
-  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
-  document.getElementById('lightbox-prev').addEventListener('click', prevLightbox);
-  document.getElementById('lightbox-next').addEventListener('click', nextLightbox);
-  lb.addEventListener('click', (e) => {
-    if (e.target === lb) closeLightbox();
-  });
-
-  document.addEventListener('keydown', lightboxKeydown);
+function startAutoAdvance() {
+  stopAutoAdvance();
+  slideTimer = setInterval(() => {
+    if (!slidePaused) goToSlide(slideIndex + 1);
+  }, 3000);
 }
 
-function closeLightbox() {
-  document.getElementById('lightbox').classList.add('hidden');
-  document.removeEventListener('keydown', lightboxKeydown);
-  currentLightboxIdx = -1;
+function stopAutoAdvance() {
+  if (slideTimer) clearInterval(slideTimer);
 }
 
-function prevLightbox() {
-  if (currentLightboxIdx <= 0) return;
-  openLightbox(currentLightboxIdx - 1);
+function togglePause() {
+  slidePaused = !slidePaused;
 }
 
-function nextLightbox() {
-  if (currentLightboxIdx >= mediaFiles.length - 1) return;
-  openLightbox(currentLightboxIdx + 1);
-}
+document.getElementById('slideshow-prev').addEventListener('click', () => {
+  goToSlide(slideIndex - 1);
+  startAutoAdvance();
+});
 
-function lightboxKeydown(e) {
-  if (e.key === 'Escape') closeLightbox();
-  if (e.key === 'ArrowLeft') prevLightbox();
-  if (e.key === 'ArrowRight') nextLightbox();
-}
+document.getElementById('slideshow-next').addEventListener('click', () => {
+  goToSlide(slideIndex + 1);
+  startAutoAdvance();
+});
 
-buildGallery();
+document.getElementById('slideshow-track').addEventListener('click', togglePause);
+
+buildSlideshow();
