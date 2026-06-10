@@ -1,0 +1,53 @@
+Design a premium mobile-first birthday memory gallery that feels like an emotional cinematic experience, not a standard photo album.
+
+The gallery contains hundreds of photos and videos from a birthday celebration. The goal is to make users feel like they are reliving the entire day.
+
+Style:
+
+* Modern, luxury, immersive, emotional
+* Apple-level design quality
+* Dark elegant background with subtle gradients and glassmorphism
+* Smooth micro-interactions and fluid animations
+* No cheesy birthday graphics, balloons, confetti, or childish elements
+* Clean typography with strong visual hierarchy
+
+Layout:
+
+* Full-screen vertical experience optimized for phones
+* Dynamic masonry layout mixed with large hero moments
+* Photos and videos have varying sizes to create rhythm and surprise
+* Important moments automatically appear larger
+* Videos autoplay silently when visible
+* Seamless scrolling with parallax effects
+
+Features:
+
+* "Story Chapters" such as Arrival, Friends, Cake, Party, Late Night Memories
+* AI-generated memory highlights section at the top
+* Interactive timeline users can scrub through
+* Floating date/time indicators while scrolling
+* Beautiful transitions between sections
+* Video previews integrated naturally among photos
+* Memory cards with short captions and reactions
+
+Animations:
+
+* Smooth fade-ins
+* Depth and motion effects while scrolling
+* Photos slightly tilt and react to touch
+* Elegant fullscreen viewer with swipe navigation
+* Premium motion design inspired by Apple Photos, Instagram, and modern award-winning portfolio websites
+
+Mood:
+
+* Emotional, nostalgic, cinematic, unforgettable
+* Feels like a luxury digital scrapbook made by a world-class designer
+* Every interaction should make the birthday feel special and memorable
+
+Avoid:
+
+* Generic gallery grids
+* Template-looking designs
+* Bright rainbow colors
+* Dated UI patterns
+* Anything that feels cheap or amateur

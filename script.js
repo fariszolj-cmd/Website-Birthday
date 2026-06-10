@@ -11,7 +11,6 @@ const btnEnter = document.getElementById('btnEnter');
 const btnYes = document.getElementById('btnYes');
 const btnNo = document.getElementById('btnNo');
 const burstOverlay = document.getElementById('burstOverlay');
-const confettiCanvas = document.getElementById('confetti-canvas');
 
 // ===== NAME ENTRY =====
 function normalizeAndCheckName(input) {
@@ -52,7 +51,6 @@ function evadeButton() {
   const newX = -cardRect.width * overflow + Math.random() * rangeX;
   const newY = -cardRect.height * overflow + Math.random() * rangeY;
 
-  // Move button to card-level so it can roam freely
   if (btn.parentElement !== card) {
     card.appendChild(btn);
   }
@@ -62,25 +60,24 @@ function evadeButton() {
   btn.style.zIndex = '5';
 
   const messages = [
-    'nice try 😘',
-    'stop it 🤭',
-    'not today 💅',
-    'keep trying ❤️',
-    'just give up 💀',
-    'too slow 😏',
-    'never gonna catch me 🏃',
-    'lmaoo okay you win 🏆',
-    'still going? 😂',
-    'you never learn 💀',
-    'give up already 🙄',
-    'persistent huh 😏',
-    'ok you got me 🥹',
+    'nice try',
+    'stop it',
+    'not today',
+    'keep trying',
+    'just give up',
+    'too slow',
+    'never gonna catch me',
+    'lmaoo okay you win',
+    'still going?',
+    'you never learn',
+    'give up already',
+    'persistent huh',
+    'ok you got me',
   ];
   const idx = (evadeCount - 1) % messages.length;
   btn.textContent = messages[idx];
 }
 
-// Reset button position when going back to choice screen
 function resetNoButton() {
   const parent = document.querySelector('.choice-buttons');
   if (btnNo.parentElement !== parent) {
@@ -108,8 +105,6 @@ btnNo.addEventListener('click', (e) => {
 btnYes.addEventListener('click', function() {
   playBirthdaySong();
   burstOverlay.classList.add('show');
-  startConfetti();
-  createHeartRain();
 
   setTimeout(() => {
     burstOverlay.classList.remove('show');
@@ -117,7 +112,9 @@ btnYes.addEventListener('click', function() {
     screenChoice.classList.add('hidden');
     screenCelebration.classList.remove('hidden');
     document.body.classList.add('gallery-open');
-    intensifySparkles();
+    setupGalleryObserver();
+    revealCards();
+    document.getElementById('scroll-arrow').style.display = 'none';
   }, 1200);
 });
 
@@ -126,122 +123,12 @@ btnYes.addEventListener('touchend', (e) => {
   btnYes.click();
 });
 
-// ===== CONFETTI =====
-const ctx = confettiCanvas.getContext('2d');
-let confettiPieces = [];
-let confettiRunning = false;
-let confettiRAF;
-
-function resizeCanvas() {
-  confettiCanvas.width = window.innerWidth;
-  confettiCanvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-resizeCanvas();
-
-function startConfetti() {
-  confettiPieces = [];
-  const colors = ['#ff2d55', '#ff6b8a', '#ff9a9e', '#fad0c4', '#fbc2eb', '#a18cd1', '#ffd700', '#ff69b4'];
-  for (let i = 0; i < 200; i++) {
-    confettiPieces.push({
-      x: Math.random() * confettiCanvas.width,
-      y: Math.random() * confettiCanvas.height - confettiCanvas.height,
-      w: Math.random() * 10 + 5,
-      h: Math.random() * 6 + 3,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      vx: (Math.random() - 0.5) * 3,
-      vy: Math.random() * 3 + 2,
-      rot: Math.random() * 360,
-      rotSpeed: (Math.random() - 0.5) * 8,
-    });
-  }
-  confettiRunning = true;
-  animateConfetti();
-}
-
-function animateConfetti() {
-  if (!confettiRunning) return;
-  ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-  let allDone = true;
-  for (const p of confettiPieces) {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.rot += p.rotSpeed;
-    if (p.y < confettiCanvas.height + 20) allDone = false;
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate((p.rot * Math.PI) / 180);
-    ctx.fillStyle = p.color;
-    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-    ctx.restore();
-  }
-  if (!allDone) {
-    confettiRAF = requestAnimationFrame(animateConfetti);
-  } else {
-    confettiRunning = false;
-  }
-}
-
-// ===== HEART RAIN =====
-function createHeartRain() {
-  const container = document.getElementById('sparkleContainer');
-  const emojis = ['❤️', '💖', '💗', '💕', '✨', '🎂', '🥳'];
-  for (let i = 0; i < 40; i++) {
-    const heart = document.createElement('div');
-    heart.className = 'heart';
-    heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    heart.style.left = Math.random() * 100 + '%';
-    heart.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
-    heart.style.animationDuration = (Math.random() * 4 + 3) + 's';
-    heart.style.animationDelay = (Math.random() * 5) + 's';
-    container.appendChild(heart);
-    setTimeout(() => heart.remove(), 12000);
-  }
-}
-
-// ===== SPARKLES =====
-function initSparkles() {
-  const container = document.getElementById('sparkleContainer');
-  for (let i = 0; i < 50; i++) {
-    const sparkle = document.createElement('div');
-    sparkle.className = 'sparkle';
-    sparkle.style.left = Math.random() * 100 + '%';
-    sparkle.style.width = (Math.random() * 4 + 2) + 'px';
-    sparkle.style.height = sparkle.style.width;
-    sparkle.style.animationDuration = (Math.random() * 6 + 4) + 's';
-    sparkle.style.animationDelay = (Math.random() * 8) + 's';
-    const colors = ['#ff6b8a', '#ff9a9e', '#fad0c4', '#fbc2eb', '#a18cd1'];
-    sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
-    container.appendChild(sparkle);
-  }
-}
-
-function intensifySparkles() {
-  const container = document.getElementById('sparkleContainer');
-  for (let i = 0; i < 80; i++) {
-    const sparkle = document.createElement('div');
-    sparkle.className = 'sparkle';
-    sparkle.style.left = Math.random() * 100 + '%';
-    sparkle.style.width = (Math.random() * 6 + 3) + 'px';
-    sparkle.style.height = sparkle.style.width;
-    sparkle.style.animationDuration = (Math.random() * 4 + 2) + 's';
-    sparkle.style.animationDelay = (Math.random() * 3) + 's';
-    const colors = ['#ff2d55', '#ff6b8a', '#ffd700', '#ff9a9e', '#fbc2eb', '#a18cd1', '#ff69b4'];
-    sparkle.style.background = colors[Math.floor(Math.random() * colors.length)];
-    sparkle.style.boxShadow = '0 0 12px ' + sparkle.style.background;
-    container.appendChild(sparkle);
-  }
-}
-
-initSparkles();
-
 // ===== BACKGROUND AUDIO =====
 function playBirthdaySong() {
   const audio = document.getElementById('birthdaySong');
   if (audio) {
     audio.currentTime = 96;
     audio.play().catch(() => {
-      // Autoplay blocked - play on first user tap
       const tapPlay = () => {
         audio.play();
         document.removeEventListener('click', tapPlay);
@@ -253,58 +140,154 @@ function playBirthdaySong() {
   }
 }
 
-// ===== REEL =====
-const mediaFiles = [
-  { src: 'Azra/0A710B1C-5134-427E-80C8-E94E2B35373A.JPG', type: 'img' },
-  { src: 'Azra/2FE8DF4B-F46F-4E56-93C8-93C74C68EFB8.JPG', type: 'img' },
-  { src: 'Azra/3119ff38-ef75-436b-9007-ae454ed4464f.JPG', type: 'img' },
-  { src: 'Azra/324461B2-DFAA-43AC-BB1E-BCDF17905E52.JPG', type: 'img' },
-  { src: 'Azra/5F63873F-42F9-47E5-9B10-49C8F649E871.JPG', type: 'img' },
-  { src: 'Azra/70DFC1EC-E48C-411C-AFF7-171BBEF792FD.JPG', type: 'img' },
-  { src: 'Azra/7EBE1CCD-B870-432B-B3C1-F55D34CDA9F9.JPG', type: 'img' },
-  { src: 'Azra/98633d3b-9081-4b31-8df0-a82cf5bb1ce0.JPG', type: 'img' },
-  { src: 'Azra/C7A69E74-7443-4939-9AA1-BB1D77BF7FFF.JPG', type: 'img' },
-  { src: 'Azra/IMG_1794.JPG', type: 'img' },
-  { src: 'Azra/IMG_8829.jpg', type: 'img' },
-  { src: 'Azra/355345b4421d4a76a35e80fb1950da72.MOV', type: 'video' },
+// ===== CINEMATIC GALLERY =====
+const galleryItems = [
+  { src: 'Azra/0A710B1C-5134-427E-80C8-E94E2B35373A.JPG', type: 'img', size: 'large', caption: '', chapter: 0 },
+  { src: 'Azra/2FE8DF4B-F46F-4E56-93C8-93C74C68EFB8.JPG', type: 'img', size: 'small', caption: '', chapter: 0 },
+  { src: 'Azra/3119ff38-ef75-436b-9007-ae454ed4464f.JPG', type: 'img', size: 'medium', caption: '', chapter: 0 },
+  { src: 'Azra/324461B2-DFAA-43AC-BB1E-BCDF17905E52.JPG', type: 'img', size: 'large', caption: '', chapter: 0 },
+  { src: 'Azra/5F63873F-42F9-47E5-9B10-49C8F649E871.JPG', type: 'img', size: 'small', caption: '', chapter: 1 },
+  { src: 'Azra/70DFC1EC-E48C-411C-AFF7-171BBEF792FD.JPG', type: 'img', size: 'medium', caption: '', chapter: 1 },
+  { src: 'Azra/7EBE1CCD-B870-432B-B3C1-F55D34CDA9F9.JPG', type: 'img', size: 'large', caption: '', chapter: 1 },
+  { src: 'Azra/98633d3b-9081-4b31-8df0-a82cf5bb1ce0.JPG', type: 'img', size: 'medium', caption: '', chapter: 2 },
+  { src: 'Azra/C7A69E74-7443-4939-9AA1-BB1D77BF7FFF.JPG', type: 'img', size: 'small', caption: '', chapter: 2 },
+  { src: 'Azra/IMG_1794.JPG', type: 'img', size: 'large', caption: '', chapter: 2 },
+  { src: 'Azra/IMG_8829.jpg', type: 'img', size: 'large', caption: '', chapter: 3 },
+  { src: 'Azra/355345b4421d4a76a35e80fb1950da72.MOV', type: 'video', size: 'large', caption: '', chapter: 3 },
 ];
 
-function buildReel() {
-  const reel = document.getElementById('reel');
-  reel.innerHTML = '';
-  mediaFiles.forEach((file) => {
-    const div = document.createElement('div');
-    div.className = 'reel-slide';
-    if (file.type === 'video') {
+const chapters = ['the beginning', 'us', 'celebration', 'memories'];
+
+let viewerOpen = false;
+let viewerIdx = 0;
+let touchStartX = 0;
+
+function buildGallery() {
+  const grid = document.getElementById('gallery-grid');
+  grid.innerHTML = '';
+
+  galleryItems.forEach((item, i) => {
+    if (i === 0 || item.chapter !== galleryItems[i - 1].chapter) {
+      const ch = document.createElement('div');
+      ch.className = 'chapter-header';
+      ch.innerHTML = '<div class="chapter-label">chapter</div><div class="chapter-title">' + chapters[item.chapter] + '</div>';
+      grid.appendChild(ch);
+    }
+
+    const card = document.createElement('div');
+    card.className = 'memory-card ' + item.size;
+    card.dataset.idx = i;
+
+    if (item.type === 'video') {
       const vid = document.createElement('video');
-      vid.src = file.src;
+      vid.src = item.src;
       vid.muted = true;
       vid.loop = true;
       vid.playsInline = true;
       vid.preload = 'metadata';
-      div.appendChild(vid);
+      vid.loading = 'lazy';
+      card.appendChild(vid);
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) vid.play();
+          else vid.pause();
+        });
+      }, { threshold: 0.3 });
+      obs.observe(card);
     } else {
       const img = document.createElement('img');
-      img.src = file.src;
+      img.src = item.src;
       img.loading = 'lazy';
-      div.appendChild(img);
+      card.appendChild(img);
     }
-    reel.appendChild(div);
+
+    card.addEventListener('click', () => openViewer(i));
+    grid.appendChild(card);
   });
 }
 
-function updateReelProgress() {
-  const reel = document.getElementById('reel');
-  const bar = document.getElementById('reel-progress');
-  const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  const reelTop = reel.getBoundingClientRect().top + window.scrollY;
-  const reelHeight = reel.scrollHeight;
-  const viewH = window.innerHeight;
-  const maxScroll = reelHeight - viewH;
-  const currentScroll = scrollTop - reelTop;
-  const pct = Math.min(100, Math.max(0, (currentScroll / maxScroll) * 100));
-  bar.style.width = pct + '%';
+function setupGalleryObserver() {
+  const cards = document.querySelectorAll('.memory-card');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  cards.forEach(c => obs.observe(c));
 }
 
-window.addEventListener('scroll', updateReelProgress);
-buildReel();
+function revealCards() {
+  const cards = document.querySelectorAll('.memory-card');
+  let delay = 0;
+  cards.forEach(c => {
+    setTimeout(() => c.classList.add('visible'), delay);
+    delay += 80;
+  });
+}
+
+// ===== FULLSCREEN VIEWER =====
+function openViewer(idx) {
+  viewerIdx = idx;
+  viewerOpen = true;
+  const viewer = document.getElementById('viewer');
+  const content = document.getElementById('viewer-content');
+  const counter = document.getElementById('viewer-counter');
+  content.innerHTML = '';
+
+  const item = galleryItems[idx];
+  if (item.type === 'video') {
+    const vid = document.createElement('video');
+    vid.src = item.src;
+    vid.controls = true;
+    vid.autoplay = true;
+    content.appendChild(vid);
+  } else {
+    const img = document.createElement('img');
+    img.src = item.src;
+    content.appendChild(img);
+  }
+
+  counter.textContent = (idx + 1) + ' / ' + galleryItems.length;
+  viewer.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeViewer() {
+  viewerOpen = false;
+  document.getElementById('viewer').classList.add('hidden');
+  document.body.style.overflow = '';
+  const vid = document.querySelector('#viewer-content video');
+  if (vid) vid.pause();
+}
+
+function navigateViewer(dir) {
+  const next = viewerIdx + dir;
+  if (next < 0 || next >= galleryItems.length) return;
+  openViewer(next);
+}
+
+document.getElementById('viewer-close').addEventListener('click', closeViewer);
+
+document.getElementById('viewer').addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+});
+
+document.getElementById('viewer').addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) {
+    navigateViewer(dx < 0 ? 1 : -1);
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (!viewerOpen) return;
+  if (e.key === 'Escape') closeViewer();
+  if (e.key === 'ArrowLeft') navigateViewer(-1);
+  if (e.key === 'ArrowRight') navigateViewer(1);
+});
+
+buildGallery();

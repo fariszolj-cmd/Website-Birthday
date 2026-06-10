@@ -8,14 +8,13 @@
 </head>
 <body>
 
-  <div class="sparkle-container" id="sparkleContainer"></div>
-  <canvas id="confetti-canvas"></canvas>
+  <div id="bg-ambient"></div>
   <div class="burst-overlay" id="burstOverlay">
     <div class="burst-text">HELL YEAH! ❤️</div>
   </div>
 
-  <div class="container">
-    <div class="card">
+  <div class="container" id="app-container">
+    <div class="card" id="app-card">
 
       <div id="screen-name">
         <h1>Hey you ❤️</h1>
@@ -35,17 +34,29 @@
       </div>
 
       <div id="screen-celebration" class="hidden">
-        <h1>Happy Birthday Babygirl! 🎂</h1>
-        <p>but first lets celebrate this special day babygirl</p>
-        <p class="heart-quote">"another year spent in love with the same nigga i adore"</p>
         <audio id="birthdaySong" src="Song.mp3" preload="auto"></audio>
-        <div id="reel-wrapper">
-          <div id="reel"></div>
-          <div id="reel-bar"><div id="reel-progress"></div></div>
+
+        <div id="memory-gallery">
+          <div id="gallery-header">
+            <p class="gallery-label">a day to remember</p>
+            <h1>Happy Birthday Babygirl</h1>
+            <p class="gallery-sub">another year spent in love with the same nigga i adore</p>
+          </div>
+          <div id="gallery-grid"></div>
+        </div>
+
+        <div id="viewer" class="hidden">
+          <span id="viewer-close">&times;</span>
+          <div id="viewer-content"></div>
+          <div id="viewer-counter"></div>
         </div>
       </div>
 
     </div>
+  </div>
+
+  <div id="scroll-arrow">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
   </div>
 
   <script src="script.js"></script>
